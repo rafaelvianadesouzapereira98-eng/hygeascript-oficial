@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZyraScript - Manual Oficial de Uso</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 40px; background-color: #f8f9fa; color: #333; }
+        .manual-header { background-color: #007bff; color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+        .manual-header h1 { margin: 0; font-size: 2.5em; }
+        .manual-content { max-width: 900px; margin: 20px auto; background: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+        h2 { color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 5px; margin-top: 40px; }
+        h3 { color: #28a745; margin-top: 25px; }
+        code { background-color: #f0f0f0; padding: 2px 5px; border-radius: 3px; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #e9ecef; color: #333; }
+        .tip { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; margin-top: 20px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="manual-header">
+        <h1>Manual Oficial de Uso da ZyraScript (v4.0)</h1>
+        <p>Referência completa da linguagem de programação Zyra.</p>
+    </div>
+
+    <div class="manual-content">
+        <h2>1. Introdução</h2>
+        <p>A ZyraScript é uma linguagem de alto nível projetada para ser simples e poderosa, com suporte para Playground (Web) e Terminal (CLI).</p>
+        <p class="tip"><strong>Download:</strong> Todos os arquivos (<code>zyra_playground_v4.html</code>, <code>zyra.exe</code>) estão disponíveis no <a href="index.html">site oficial</a>.</p>
+        
+        <h2>2. Funções Essenciais (Comandos Nativos)</h2>
+        <p>Comandos básicos que podem ser usados em qualquer parte do seu código Zyra.</p>
+        <table>
+            <thead><tr><th>Comando</th><th>Descrição</th><th>Exemplo</th></tr></thead>
+            <tbody>
+                <tr><td><code>diga</code></td><td>Imprime texto ou o valor de variáveis na saída.</td><td><code>diga "Olá, " Nome</code></td></tr>
+                <tr><td><code>soma</code>, <code>subtrai</code></td><td>Realiza operações básicas.</td><td><code>soma 10 5</code></td></tr>
+                <tr><td><code>concat</code></td><td>Junta duas strings. (Alternativa ao operador <code>..</code>)</td><td><code>Mensagem = concat "Bom" "Dia"</code></td></tr>
+                <tr><td><code>procuraFilho</code></td><td>Acessa o <code>textContent</code> de um elemento HTML usando seu ID.</td><td><code>Texto = procuraFilho "elemento_id"</code></td></tr>
+            </tbody>
+        </table>
+
+        <h2>3. Estruturas de Fluxo de Controle</h2>
+        
+        <h3>3.1. Condicionais</h3>
+        <p>Usada para tomar decisões no código.</p>
+        <code>se [CONDIÇÃO] então [BLOCO DE CÓDIGO] fim</code>
+        <pre><code>se Idade > 18 então
+    diga "Maior de idade"
+fim</code></pre>
+
+        <h3>3.2. Repetições (Loops)</h3>
+        <p>Repete um bloco de código um número fixo de vezes.</p>
+        <code>repete [NÚMERO] vezes [BLOCO DE CÓDIGO] fim</code>
+        <pre><code>repete 3 vezes
+    diga "Repetindo..."
+fim</code></pre>
+
+        <h2>4. Variáveis, Funções e Listas</h2>
+        
+        <h3>4.1. Variáveis e Atribuição</h3>
+        <p>Use o sinal de <code>=</code> para armazenar qualquer valor.</p>
+        <pre><code>Nome = "Zyra"
+Resultado = 10 * 5</code></pre>
+
+        <h3>4.2. Funções Personalizadas</h3>
+        <p>Permite criar blocos de código reutilizáveis.</p>
+        <code>func NomeFuncao(param1, param2) [BLOCO] retorna [VALOR] fim</code>
+        <pre><code>func MultiplicaPorDois(valor)
+    NovoValor = valor * 2
+    retorna NovoValor
+fim
+
+X = MultiplicaPorDois(50)
+diga X # Imprime 100</code></pre>
+
+        <h3>4.3. Listas (Arrays)</h3>
+        <p>Cria e acessa coleções de dados.</p>
+        <pre><code>ListaFrutas = lista ["Maçã", "Banana", 176]
+diga ListaFrutas[0] # Imprime "Maçã"</code></pre>
+
+        <h2>5. Operadores</h2>
+        <table>
+            <thead><tr><th>Operador</th><th>Nome</th><th>Exemplo</th></tr></thead>
+            <tbody>
+                <tr><td><code>=</code></td><td>Atribuição</td><td><code>Variavel = 5</code></td></tr>
+                <tr><td><code>..</code></td><td>Concatenação de String</td><td><code>"A" .. "B"</code></td></tr>
+                <tr><td><code>+</code>, <code>-</code>, <code>*</code>, <code>/</code></td><td>Aritméticos</td><td><code>1 + 1</code></td></tr>
+                <tr><td><code>**</code></td><td>Potência</td><td><code>2 ** 3</code> (Resultado: 8)</td></tr>
+                <tr><td><code>==</code>, <code>!=</code>, <code>></code>, <code><</code></td><td>Comparação (usados em condicionais)</td><td><code>se X > Y então...</code></td></tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

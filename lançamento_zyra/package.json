@@ -1,0 +1,10 @@
+{
+  "name": "zyrascript-cli",
+  "version": "4.0.0",
+  "description": "Interpretador de linha de comando para ZyraScript.",
+  "main": "zyra.js",
+  "bin": "zyra.js",
+  "scripts": {
+    "package": "pkg ."
+  }
+}

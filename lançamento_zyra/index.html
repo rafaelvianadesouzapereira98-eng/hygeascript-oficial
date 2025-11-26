@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZyraScript - Site Oficial</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: center;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 40px 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 3em;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .download-grid {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        .card {
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 20px;
+            margin: 15px;
+            width: 350px;
+            text-align: left;
+        }
+        .card h2 {
+            color: #007bff;
+            margin-top: 0;
+        }
+        .download-btn {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .download-btn:hover {
+            background-color: #218838;
+        }
+        .version {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+        .manual-link-section {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #f0f8ff;
+            border-radius: 6px;
+            border: 1px solid #007bff;
+        }
+        .manual-link-btn {
+             display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .manual-link-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>ZyraScript 💻</h1>
+        <p>A sua linguagem de programação para o Playground e Terminal. Versão 4.0</p>
+    </div>
+
+    <div class="container">
+        <h2>Recursos para Download</h2>
+        
+        <div class="download-grid">
+
+            <div class="card">
+                <h2>Zyra Playground (Web)</h2>
+                <p>O ambiente completo em HTML que roda no seu navegador. Ótimo para testar código sem instalar nada.</p>
+                <p class="version">Versão: 4.0.0</p>
+                <a href="zyra_playground_v4.html" download class="download-btn">Baixar HTML Completo</a>
+            </div>
+
+            <div class="card">
+                <h2>Zyra CLI (Terminal)</h2>
+                <p>O interpretador executável que funciona diretamente no Windows (arquivo .exe). Use para rodar scripts Zyra.</p>
+                <p class="version">Versão: 4.0.0</p>
+                <a href="zyra.exe" download class="download-btn">Baixar Executável (.exe)</a>
+            </div>
+
+        </div>
+
+        <div class="manual-link-section">
+            <h2>Manual Oficial e Documentação</h2>
+            <p>Acesse o guia completo de comandos, estruturas e exemplos da linguagem ZyraScript.</p>
+            <a href="manual.html" class="manual-link-btn">Acessar Manual Completo</a>
+        </div>
+        
+    </div>
+</body>
+</html>
