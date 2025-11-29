@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Zyra - Linguagem Playground v4.0 (FINAL)</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding:20px; background:#f4f4f4; color:#111; }
+    textarea { width:100%; height:280px; font-family: monospace; font-size: 14px; padding: 10px; border: 1px solid #ccc; }
+    pre { background:#fff; padding:15px; min-height:100px; white-space:pre-wrap; border: 2px solid #007bff; font-family: monospace; font-size: 14px; }
+    button { padding:12px 20px; margin-top:10px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; font-weight: bold; }
+    h1 { color: #007bff; }
+    #elemento_teste { background: #ffeaa7; padding: 5px; border: 1px solid #fdcb6e; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>🚀 Zyra Playground v4.0 — Interpretador Finalizado</h1>
+  <p>Teste todas as funcionalidades da sua linguagem.</p>
+
+  <div id="elemento_teste">Conteúdo do Elemento de Teste (ID: elemento_teste)</div>
+
+  <textarea id="codigo">
+# --- 🏆 TESTE FINAL ZYRA SCRIPT (v4.0) 🏆 ---
+
+diga "Iniciando o teste de todas as funcionalidades..."
+
+# 1. Variáveis e Expressões (Operadores: *, +, -, **)
+NumeroA = 10
+NumeroB = 2
+ResultadoExpressao = (NumeroA ** NumeroB) - (NumeroA + NumeroB) # (10 ao quadrado) - 12 = 88
+diga "Resultado do cálculo complexo: " ResultadoExpressao
+
+# 2. Funções (func, retorna)
+func MultiplicaPorDois(valor)
+    Temp = valor * 2
+    retorna Temp
+fim
+
+ValorDaFuncao = MultiplicaPorDois(ResultadoExpressao) # 88 * 2 = 176
+diga "Valor após a função MultiplicaPorDois: " ValorDaFuncao
+
+# 3. Listas e Acesso (lista, [index])
+ListaFrutas = lista ["Maçã", "Banana", 176]
+diga "Primeira fruta da lista: " ListaFrutas[0]
+
+# 4. Concatenação de Texto (..)
+MensagemFinal = "A Zyra " .. "FUNCIONOU!"
+diga MensagemFinal
+
+# 5. Condicional (se, entao)
+se ListaFrutas[2] == ValorDaFuncao entao
+    diga "--- Condição Aprovada: Loop Iniciado ---"
+    
+    # 6. Loop (repete)
+    repete 2 vezes
+        diga "🚀 Loop rodando (Repetição)! "
+    fim
+fim
+
+# 7. Procura Filho (Manipulação de Elemento)
+diga "Procurando elemento HTML (elemento_teste)..."
+ElementoTexto = procuraFilho "elemento_teste"
+diga "Conteúdo HTML encontrado: " ElementoTexto
+
+diga "--- Teste Completo Finalizado! ---"
+  </textarea>
+  <br>
+  <button onclick="rodar()">Executar</button>
+
+  <h2>Saída:</h2>
+  <pre id="saida"></pre>
+
+  <script>
+    // --- Dicionários de Estado Global ---
+    const variaveis = {}; 
+    const funcoes = {};   
+    const saidaEl = document.getElementById("saida");
+
+    // --- Comandos e Funções Nativas ---
+    const comandosZyra = {
+        "diga": (msg, ...msgs) => {
+            let output = [msg, ...msgs].map(item => {
+                if (typeof item === 'string' && variaveis.hasOwnProperty(item)) {
+                    item = variaveis[item];
+                }
+                return Array.isArray(item) ? '[' + item.join(', ') + ']' : item;
+            }).join(" ");
+            return output;
+        },
+        "soma": (a, b) => Number(a) + Number(b),
+        "subtrai": (a, b) => Number(a) - Number(b),
+        "magia": (palavra) => "✨ " + String(palavra).toUpperCase() + " ✨",
+        "maior": (a, b) => { return parseArg(a) > parseArg(b) ? "true" : "false"; },
+        "menor": (a, b) => { return parseArg(a) < parseArg(b) ? "true" : "false"; },
+        "concat": (a, b) => {
+            let valA = (typeof a === 'string' && variaveis.hasOwnProperty(a)) ? variaveis[a] : a;
+            let valB = (typeof b === 'string' && variaveis.hasOwnProperty(b)) ? variaveis[b] : b;
+            return String(valA) + String(valB);
+        },
+        "procuraFilho": (id) => {
+             const el = document.getElementById(id);
+             return el ? el.textContent.trim() : `Erro: Elemento '${id}' não encontrado.`;
+        }
+    };
+
+    // --- Funções Auxiliares de Expressão ---
+    function evaluateExpression(expr, contextVars = variaveis) {
+        let jsExpr = String(expr).trim();
+        
+        // 1. Substitui variáveis Zyra por seus valores JS (incluindo acesso a listas)
+        jsExpr = jsExpr.replace(/([a-zA-Z_]\w*)(\[.*?\])?/g, (match, varName, indexAccess) => {
+            if (contextVars.hasOwnProperty(varName)) {
+                if (indexAccess) {
+                    return `contextVars['${varName}']${indexAccess}`;
+                }
+                const val = contextVars[varName];
+                if (typeof val === 'string') return `'${val}'`;
+                if (Array.isArray(val)) return `contextVars['${varName}']`;
+                return val;
+            }
+            return match;
+        });
+        
+        // 2. Substitui operadores Zyra por JS
+        jsExpr = jsExpr.replace(/\*\*|==|!=|>=|<=|>|<|\+|\-|\*|\/|\%|\.\./g, (op) => {
+            if (op === '..') return '+'; // Concatenação Zyra '..' vira '+' em JS
+            return op;
+        });
+
+        // 3. Executa a expressão
+        try {
+            return eval(jsExpr);
+        } catch (e) {
+            console.error(`Erro de Expressão: '${expr}' resultou em erro: ${e.message}`);
+            return undefined;
+        }
+    }
+
+    function normalizar(txt){
+      if(!txt) return "";
+      return String(txt).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
+    }
+
+    function parseArg(arg){
+      if(arg === undefined) return undefined;
+      arg = String(arg).trim();
+      if(/^".*"$/.test(arg) || /^'.*'$/.test(arg)) return arg.slice(1,-1); 
+      if(arg.startsWith('[')) return arg; 
+      if(!isNaN(arg) && arg !== "") return Number(arg); 
+      return variaveis.hasOwnProperty(arg) ? variaveis[arg] : arg; 
+    }
+
+    function avaliarCondicao(partes) {
+        const condicao = partes.join(" ");
+        return evaluateExpression(condicao);
+    }
+
+    function procurarBloco(linhas, startLineIndex, inicioKeyword, fimKeyword) {
+        let profundidade = 1; 
+        let endIndex = -1;
+        let bloco = [];
+        
+        for (let j = startLineIndex + 1; j < linhas.length; j++) {
+            let linha = normalizar(linhas[j].trim());
+            
+            if (linha.startsWith(inicioKeyword + ' ')) {
+                profundidade++;
+            } else if (linha === fimKeyword) {
+                profundidade--;
+                if (profundidade === 0) {
+                    endIndex = j;
+                    break;
+                }
+            }
+            
+            if (profundidade === 1) { 
+                bloco.push(linhas[j].trim());
+            }
+        }
+        return { bloco, endIndex };
+    }
+
+    function executarFuncao(nomeFunc, argsValores) {
+        if (!funcoes.hasOwnProperty(nomeFunc)) { return undefined; }
+
+        const definicao = funcoes[nomeFunc];
+        const localVars = { ...variaveis }; 
+        let retorno = undefined;
+
+        definicao.params.forEach((paramName, index) => { localVars[paramName] = argsValores[index]; });
+
+        for (let i = 0; i < definicao.bloco.length; i++) {
+            let linha = definicao.bloco[i].trim();
+            if (linha === "" || linha.startsWith("#")) continue;
+            
+            const partes = linha.split(" ");
+            const comando = normalizar(partes[0]);
+
+            if (comando === 'retorna') {
+                const valorRaw = partes.slice(1).join(" ");
+                retorno = evaluateExpression(valorRaw, localVars);
+                return retorno; 
+            }
+
+            // --- Atribuição LOCAL ---
+            if (linha.includes("=")) {
+                const parts = linha.split("=");
+                if (parts.length === 2) {
+                    const varName = parts[0].trim();
+                    const expression = parts[1].trim();
+                    localVars[varName] = evaluateExpression(expression, localVars);
+                    continue;
+                }
+            }
+
+            // --- Execução de Comandos ---
+            let rawArgs = partes.slice(1);
+            const args = rawArgs.map(a => localVars.hasOwnProperty(a) ? localVars[a] : parseArg(a));
+
+            if (comandosZyra[comando]) {
+                try {
+                    let res = comandosZyra[comando](...args);
+                    if (res !== undefined && res !== "") console.log(`[Func ${nomeFunc}] ${res}`);
+                } catch (e) { console.error(e); }
+            }
+        }
+        return retorno;
+    }
+
+    // --- Interpretador Principal ---
+    function rodar(){
+      const texto = document.getElementById("codigo").value;
+      const linhas = texto.split(/\r?\n/);
+      let saida = "";
+      
+      // Limpa estado para nova execução
+      for (const prop in variaveis) { delete variaveis[prop]; }
+      for (const prop in funcoes) { delete funcoes[prop]; }
+
+      for (let i = 0; i < linhas.length; i++) {
+          let raw = linhas[i];
+          let linha = raw.trim();
+          
+          if (linha === "" || linha.startsWith("#")) continue;
+
+          let partes = linha.split(" ");
+          let comando = normalizar(partes[0]);
+
+          if (comando === 'fim' || comando === 'retorna') continue;
+
+          // --- 1. Definição de Função (FUNC) ---
+          if (comando === 'func') {
+              const nomeFunc = partes[1].split('(')[0];
+              const argsStr = partes.slice(1).join(" ").match(/\((.*)\)/);
+              const params = argsStr && argsStr[1].trim() ? argsStr[1].split(',').map(p => p.trim()) : [];
+
+              const { bloco, endIndex } = procurarBloco(linhas, i, 'func', 'fim');
+              if (endIndex === -1) { saida += "Erro de Sintaxe: Bloco 'func' não foi fechado com 'fim'.\n"; continue; }
+
+              funcoes[nomeFunc] = { params, bloco };
+              i = endIndex; 
+              continue;
+          }
+          
+          // --- 2. Atribuição (=) ---
+          if (linha.includes("=") && partes.length > 1) {
+              const parts = linha.split("=");
+              if (parts.length === 2) {
+                  const varName = parts[0].trim();
+                  let valorRaw = parts[1].trim();
+                  let valor = undefined;
+                  
+                  // Atribuição de Lista: lista [a, b, c]
+                  if (normalizar(valorRaw.split(" ")[0]) === 'lista') {
+                      const listContent = valorRaw.match(/\[(.*)\]/);
+                      if (listContent) {
+                          valor = listContent[1].split(',').map(a => parseArg(a.trim())); 
+                      } else {
+                          valor = [];
+                      }
+                  } 
+                  // Atribuição de Expressão ou Chamada de Função
+                  else {
+                      valor = evaluateExpression(valorRaw);
+                  }
+                  
+                  variaveis[varName] = valor;
+                  continue;
+              }
+          }
+
+          // --- 3. Loop REPTE N VEZES ---
+          if (comando === 'repete') {
+              const vezesIndex = partes.findIndex(p => normalizar(p) === 'vezes');
+              if (vezesIndex === -1) { saida += "Erro: 'repete' deve ter 'vezes'.\n"; continue; }
+              
+              const numPart = partes[vezesIndex - 1];
+              const N = Number(evaluateExpression(numPart));
+              
+              if (isNaN(N) || N <= 0) { saida += "Erro: Número de repetições inválido.\n"; continue; }
+
+              const { bloco, endIndex } = procurarBloco(linhas, i, 'repete', 'fim');
+              if (endIndex === -1) { saida += "Erro: Bloco 'repete' não foi fechado com 'fim'.\n"; continue; }
+
+              for (let k = 0; k < N; k++) {
+                  bloco.forEach(blocoLinha => {
+                      const tempParts = blocoLinha.trim().split(" ");
+                      const tempComando = normalizar(tempParts[0]);
+                      
+                      if (blocoLinha.includes("=")) {
+                          const parts = blocoLinha.split("=");
+                          if (parts.length === 2) {
+                              variaveis[parts[0].trim()] = evaluateExpression(parts[1].trim());
+                          }
+                      } else if (comandosZyra[tempComando]) {
+                          try {
+                               let res = comandosZyra[tempComando](...tempParts.slice(1).map(a => parseArg(a)));
+                               if (res !== undefined && res !== "") saida += res + '\n';
+                          } catch(e) { /* ignore */ }
+                      }
+                  });
+              }
+              
+              i = endIndex;
+              continue;
+          }
+
+          // --- 4. Condicional SE ... ENTÃO ... FIM ---
+          if (comando === 'se') {
+              const entaoIndex = partes.findIndex(p => normalizar(p) === 'entao');
+              if (entaoIndex === -1) { saida += "Erro: 'se' deve ser seguido por 'então'.\n"; continue; }
+              
+              const condicaoPartes = partes.slice(1, entaoIndex);
+              const condicaoVerdadeira = avaliarCondicao(condicaoPartes);
+
+              if (!condicaoVerdadeira) {
+                  const { endIndex } = procurarBloco(linhas, i, 'se', 'fim');
+                  if (endIndex !== -1) { i = endIndex; } else { saida += "Erro: Bloco 'se' não foi fechado com 'fim'.\n"; }
+              }
+              continue;
+          }
+          
+          // --- 5. Chamada de Função Simples ou Comando Padrão ---
+          let rawArgs = partes.slice(1);
+          const args = rawArgs.map(a => parseArg(a));
+          
+          if (funcoes.hasOwnProperty(comando)) {
+              const argsStr = partes.slice(1).join(" ").match(/\((.*)\)/);
+              const argsRaw = argsStr && argsStr[1].trim() ? argsStr[1].split(',').map(p => p.trim()) : rawArgs; 
+              const argsValores = argsRaw.map(a => evaluateExpression(a));
+              
+              const resultado = executarFuncao(comando, argsValores);
+              if (resultado !== undefined) {
+                   saida += `[Resultado Func]: ${resultado}` + '\n';
+              }
+              continue; 
+          }
+
+          if(comandosZyra[comando]){
+              try{
+                  let res = comandosZyra[comando](...args);
+                  if(res !== undefined && res !== "") saida += res + '\n';
+              }catch(e){
+                  saida += `[Erro: ${comando}] Falha na execução.\n`;
+              }
+              continue;
+          }
+
+          saida += "❓ Não entendi: " + linha + "\n";
+      }
+
+      saidaEl.textContent = saida;
+    }
+  </script>
+</body>
+</html>
